@@ -18,8 +18,12 @@ angular.module("app", [])
       const input = document.querySelector(`[type="file"]`);
       const file = input.files[0];
 
+      const randomInteger = Math.random() * 1e17;
+      const getFileExtension = file.type.split("/").slice(-1)[0];
+      const randomPath = `${randomInteger}.${getFileExtension}`;
+
       $timeout()
-        .then(uploadFile(file, "123.jpg")
+        .then(uploadFile(file, randomPath)
           .then(data => up.photoURLs.push(data.downloadURL))
           .then(input.value = ""));
     };
