@@ -10,6 +10,10 @@
   <div ng-app="app">
     <div ng-controller="UploadCtrl as up">
       <h1>{{up.heading}}</h1>
+      <form ng-submit="up.submit()">
+        <input type="file">
+        <input type="submit" value="Upload!">
+      </form>
     </div>
   </div>
 
