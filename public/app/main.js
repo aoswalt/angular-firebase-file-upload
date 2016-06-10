@@ -1,1 +1,5 @@
-console.log("It works!");
+angular.module("app", [])
+  .controller("MainCtrl", function() {
+    const main = this;
+    main.heading = "Angularify";
+  });
