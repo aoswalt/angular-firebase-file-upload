@@ -8,11 +8,11 @@ angular.module("app", [])
     });
   })
 
-  .controller("UploadCtrl", function($timeout) {
+
+  .controller("UploadCtrl", function(uploadFactory) {
     const up = this;
     up.heading = "Up the photos!";
     up.photoURLs = [];
-
 
     up.submit = () => {
       const input = document.querySelector(`[type="file"]`);
@@ -22,21 +22,24 @@ angular.module("app", [])
       const getFileExtension = file.type.split("/").slice(-1)[0];
       const randomPath = `${randomInteger}.${getFileExtension}`;
 
-      $timeout()
-        .then(uploadFile(file, randomPath)
-          .then(data => up.photoURLs.push(data.downloadURL))
-          .then(input.value = ""));
+      uploadFactory.send(file, randomPath)
+        .then(data => up.photoURLs.push(data.downloadURL))
+        .then(input.value = "");
+    };
+  })
+
+
+  .factory("uploadFactory", ($timeout) => {
+    const store = firebase.storage().ref();
+
+    return {
+      send: (file, path = file.name) =>
+        $timeout().then(() => new Promise((res, rej) => {
+          const uploadTask = store.child(path).put(file);
+          uploadTask.on("state_changed",
+            null,
+            rej,
+            () => res(uploadTask.snapshot));
+        }))
     };
   });
-
-function uploadFile(file, path) {
-  const store = firebase.storage().ref();
-
-  return new Promise((res, rej) => {
-    const uploadTask = store.child(path).put(file);
-    uploadTask.on("state_changed",
-      null,
-      rej,
-      () => res(uploadTask.snapshot));
-  });
-}
