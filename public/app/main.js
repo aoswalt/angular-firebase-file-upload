@@ -13,17 +13,26 @@ angular.module("app", [])
     up.heading = "Up the photos!";
     up.photoURLs = [];
 
-    const store = firebase.storage().ref();
 
     up.submit = () => {
       const input = document.querySelector(`[type="file"]`);
       const file = input.files[0];
-      const uploadTask = store.child("123.jpg").put(file);
 
-      uploadTask.on("state_changed", null, console.error, () => {
-        up.photoURLs.push(uploadTask.snapshot.downloadURL);
-        input.value = "";
-        $timeout();
-      });
+      $timeout()
+        .then(uploadFile(file, "123.jpg")
+          .then(data => up.photoURLs.push(data.downloadURL))
+          .then(input.value = ""));
     };
   });
+
+function uploadFile(file, path) {
+  const store = firebase.storage().ref();
+
+  return new Promise((res, rej) => {
+    const uploadTask = store.child(path).put(file);
+    uploadTask.on("state_changed",
+      null,
+      rej,
+      () => res(uploadTask.snapshot));
+  });
+}
