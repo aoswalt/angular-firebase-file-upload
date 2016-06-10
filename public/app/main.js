@@ -9,10 +9,14 @@ angular.module("app", [])
   })
 
 
-  .controller("UploadCtrl", function(uploadFactory) {
+  .controller("UploadCtrl", function(uploadFactory, $timeout) {
     const up = this;
     up.heading = "Up the photos!";
     up.photoURLs = [];
+
+    firebase.database().ref("images").once("value").then(snap =>
+      $timeout()
+        .then(up.photoURLs = Object.keys(snap.val()).map(key => snap.val()[key].url)));
 
     up.submit = () => {
       const input = document.querySelector(`[type="file"]`);
