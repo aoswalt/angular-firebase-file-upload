@@ -8,13 +8,22 @@ angular.module("app", [])
     });
   })
 
-  .controller("UploadCtrl", function() {
+  .controller("UploadCtrl", function($timeout) {
     const up = this;
     up.heading = "Up the photos!";
+    up.photoURLs = [];
+
+    const store = firebase.storage().ref();
 
     up.submit = () => {
       const input = document.querySelector(`[type="file"]`);
       const file = input.files[0];
-      console.dir(file);
+      const uploadTask = store.child("123.jpg").put(file);
+
+      uploadTask.on("state_changed", null, console.error, () => {
+        up.photoURLs.push(uploadTask.snapshot.downloadURL);
+        input.value = "";
+        $timeout();
+      });
     };
   });
