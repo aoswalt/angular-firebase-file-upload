@@ -11,7 +11,7 @@
     <div ng-controller="UploadCtrl as up">
       <h1>{{up.heading}}</h1>
       <form ng-submit="up.submit()">
-        <input type="file">
+        <input type="file" accept="image/*">
         <input type="submit" value="Upload!">
       </form>
       <img ng-src="{{url}}" ng-repeat="url in up.photoURLs">
