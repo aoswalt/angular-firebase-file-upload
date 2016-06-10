@@ -23,8 +23,11 @@ angular.module("app", [])
       const randomPath = `${randomInteger}.${getFileExtension}`;
 
       uploadFactory.send(file, randomPath)
-        .then(data => up.photoURLs.push(data.downloadURL))
-        .then(input.value = "");
+        .then(data => {
+          up.photoURLs.push(data.downloadURL);
+          input.value = "";
+          return data.downloadURL;
+        }).then(url => firebase.database().ref("/images").push({url}));
     };
   })
 
