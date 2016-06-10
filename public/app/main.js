@@ -1,5 +1,5 @@
 angular.module("app", [])
-  .controller("MainCtrl", function() {
-    const main = this;
-    main.heading = "Angularify";
+  .controller("UploadCtrl", function() {
+    const up = this;
+    up.heading = "Up the photos!";
   });
